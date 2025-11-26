@@ -5,11 +5,20 @@
     "main": "src/index.ts",
     "keywords": [],
     "author": "",
+    "scripts": {
+        "test": "vitest"
+    },
     "dependencies": {
         "magic-string": "^0.30.21"
     },
     "devDependencies": {
         "@types/node": "^24.10.1",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.14"
+    },
+    "pnpm": {
+        "overrides": {
+            "vitest>vite": "npm:rolldown-vite@7.2.7"
+        }
     }
 }

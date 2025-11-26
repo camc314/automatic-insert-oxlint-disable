@@ -52,6 +52,11 @@ function isBannedPath(filename: string): boolean {
 }
 
 function hasUncommittedChanges(): boolean {
+    // Skip git check if SKIP_GIT_CHECK env var is set
+    if (process.env.SKIP_GIT_CHECK === '1' || process.env.SKIP_GIT_CHECK === 'true') {
+        return false;
+    }
+
     try {
         const status = execSync('git status --porcelain', {
             encoding: 'utf-8',
