@@ -51,7 +51,26 @@ function isBannedPath(filename: string): boolean {
     return BANNED_PATHS.some((banned) => filename.includes(`/${banned}/`) || filename.startsWith(`${banned}/`));
 }
 
+function hasUncommittedChanges(): boolean {
+    try {
+        const status = execSync('git status --porcelain', {
+            encoding: 'utf-8',
+            stdio: ['pipe', 'pipe', 'pipe'],
+        });
+        return status.trim().length > 0;
+    } catch {
+        // If git command fails (e.g., not a git repo), assume no changes
+        return false;
+    }
+}
+
 function run() {
+    if (hasUncommittedChanges()) {
+        console.error('Error: Working tree has uncommitted changes.');
+        console.error('Please commit or stash your changes before running this tool.');
+        process.exit(1);
+    }
+
     const { values, positionals } = parseArgs({
         options: {
             rule: {
