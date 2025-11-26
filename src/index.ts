@@ -45,6 +45,12 @@ function parseDisableDirective(line: string): string[] {
     return match[1].split(',').map((r) => r.trim());
 }
 
+const BANNED_PATHS = ['node_modules', '.git'];
+
+function isBannedPath(filename: string): boolean {
+    return BANNED_PATHS.some((banned) => filename.includes(`/${banned}/`) || filename.startsWith(`${banned}/`));
+}
+
 function run() {
     const { values, positionals } = parseArgs({
         options: {
@@ -140,6 +146,12 @@ function run() {
 
     for (const [filename, diagnostics] of Object.entries(diagnosticsByFile)) {
         if (!diagnostics || diagnostics.length === 0) continue;
+
+        // Skip banned paths (node_modules, .git)
+        if (isBannedPath(filename)) {
+            console.log(`Skipping banned path: ${filename}`);
+            continue;
+        }
 
         const sourceCode = readFileSync(filename, 'utf-8');
         const lines = sourceCode.split('\n');
