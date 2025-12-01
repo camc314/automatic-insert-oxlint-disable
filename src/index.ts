@@ -157,7 +157,7 @@ function run() {
     console.log(`Found ${oxlintOutput.diagnostics.length} diagnostic(s) for rule: ${targetRuleToDisable}`);
 
     // Filter diagnostics to only include the target rule
-    const filteredDiagnostics = oxlintOutput.diagnostics.filter((diag) => diag.code === targetCodeToDisable);
+    const filteredDiagnostics = oxlintOutput.diagnostics.filter((diag) => diag.code.replace('typescript-eslint', 'typescript') === targetCodeToDisable);
 
     if (filteredDiagnostics.length === 0) {
         console.log('No diagnostics match the target rule code:', targetCodeToDisable);
